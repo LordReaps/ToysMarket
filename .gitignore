@@ -1,0 +1,110 @@
+# Документация
+HELP.md
+
+# Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.properties
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Конфигурационные файлы с секретами ###
+/src/main/resources/application.properties
+/src/main/resources/application-*.properties
+*.env
+.env
+.env.local
+.env.*.local
+
+### Загруженные файлы ###
+uploads/
+/uploads/
+files/
+/files/
+
+### Логи ###
+logs/
+*.log
+log/
+*.log.*
+
+### Временные файлы ###
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+### База данных ###
+*.db
+*.sqlite
+*.sqlite3
+h2/
+
+### Системные файлы ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+### Node.js (если используется фронтенд) ###
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+### Сертификаты и ключи ###
+*.p12
+*.jks
+*.keystore
+*.pem
+*.key
+*.crt
+*.cert
+
+### Другие конфиденциальные файлы ###
+application-secrets.yml
+application-secrets.yaml
+secrets.properties

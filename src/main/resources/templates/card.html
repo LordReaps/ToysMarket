@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ToysMarket</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" th:href="@{/css/header_style.css}" />
+    <style>
+
+    /* Контейнер карусели квадрат */
+    .carousel-container {
+        width: 600px; /* Можно изменить под нужный размер */
+        height: 600px;
+        overflow: hidden;
+        /* margin: auto; */
+        position: relative;
+        /*display: flex;*/
+        /*align-items: center; !* Центрируем по вертикали *!*/
+        /*justify-content: center; !* Центрируем по горизонтали *!*/
+
+
+    }
+    /* Сама карусель*/
+    .carousel {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Внутренний блок карусели */
+    .carousel-inner {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center; /* Центрируем по вертикали */
+    }
+
+    /* Каждый слайд */
+    .carousel-item {
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        position: relative;
+    }
+
+    /* Изображение */
+    .carousel-item img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain; /* Вместо cover */
+        border-radius: 8px;
+        /* box-shadow: 0 0 10px rgba(0,0,0,0.3); */
+        z-index: 1;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        z-index: 10; /* Чтобы кнопки были поверх изображения */
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-size: 100% 100%;
+    }
+</style>
+</head>
+<body>
+
+<div th:insert="~{blocks/header :: header}"></div>
+
+<div class="container mt-4" style="max-width: 1200px;">
+    <div class="row "> <!--justify-content-center-->
+
+        <!-- Левая часть -->
+        <div class="col-md-7" style="max-width: 600px;">
+
+            <!-- Название -->
+            <h2><strong><span th:text="${card?.card_name}"></span></strong></h2>
+
+            <!-- Слайдер -->
+            <div class="mb-4 carousel-container" th:if="${not #sets.isEmpty(card.getAllImagePaths())}">
+            <div id="cardCarousel" class="carousel slide" data-bs-ride="false">
+                <!-- Слайды -->
+                <div class="carousel-inner">
+                    <div th:each="path, iter : ${card.getAllImagePaths()}"
+                        th:classappend="${iter.index == 0} ? 'active' : ''"
+                        class="carousel-item">
+                        <img
+                                th:src="@{/api/images/__${path}__}"
+                                alt="Полупрозрачное изображение"
+                                class="d-block w-100 h-100"
+                                style="
+                                    opacity: 0.3; position: absolute;
+                                    top: 0; left: 0; width: 100%; height: 100%;
+                                    object-fit: cover; z-index: 0;
+                                    filter: blur(16px);
+                                "
+                        />
+                        <img
+                            th:src="@{/api/images/__${path}__}"
+                            alt="Изображение товара"
+                            class="d-block w-100 h-100"
+                            style="position: relative; z-index: 1;"
+                            data-orientation="auto"
+                        />
+                    </div>
+                </div>
+
+                <!-- Кнопка Назад -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#cardCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+
+                <!-- Кнопка "Вперёд" -->
+                <button class="carousel-control-next" type="button" data-bs-target="#cardCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            </div>
+
+            <!-- Характеристики -->
+            <h3><strong>Характеристики</strong></h3>
+
+            <!-- Описание -->
+            <h3><strong>Описание</strong></h3>
+            <p><span th:text="${card?.card_desc}">Описание</span></p>
+
+
+            <!-- Место -->
+            <h3><strong>Местоположение</strong></h3>
+            <p><span style="font-weight: normal;"><span th:text="${card?.card_place}">Город</span></span></p>
+
+            <h3><strong>Похожие объявления</strong></h3>
+
+        </div>
+
+
+        <!-- Правая часть -->
+        <div class="col-md-5 ms-5">
+
+            <!-- Цена -->
+            <h2><strong><span th:text="${card?.card_price}">0</span> ₽</strong></h2>
+
+            <!-- Кнопки "Купить" и "В корзину" -->
+            <div class="d-flex gap-2 mb-1">
+                <a href="#" class="btn btn-success" style="width: 50%; background-color: #4CAF50">Купить</a>
+                <a href="#" class="btn btn-outline-primary me-0" style="width: 50%; color: #4CAF50; border-color: #4CAF50;">В корзину</a>
+            </div>
+
+            <div><strong>Доставка в ***ТВОЙ ГОРОД***: от 1 дня</strong></div>
+            <div class="mb-5">Можно оплатить при получении</div>
+
+            <!-- Автор -->
+            <h5 class="mb-0"><strong><span th:text="${card?.card_author}">Автор</span></strong></h5>
+            <!-- Рейтинг !!!!!!!!!!!ПОКА СТАТИЧНЫЙ!!!!!!!!!!!!-->
+            <div class="d-flex align-items-center">
+                <span>5,0</span>
+                <div class="ms-2 d-flex" style="font-size: 1.2rem;">
+                    ⭐️⭐️⭐️⭐️⭐️
+                </div>
+                <span class="ms-2">ХХХ отзыва</span>
+            </div>
+            <div>Частное лицо</div>
+
+            <!-- Блок Написать сообщение -->
+            <a href="#" class="btn btn-success mt-3 mb-3" style="background-color: #4CAF50" role="button">Написать сообщение</a>
+
+            <!-- Блок спросить у продавца -->
+            <h4 class="mt-4"><strong>Спросите у продавца</strong></h4>
+            <div class="position-relative">
+                <textarea type="text" id="questionInput" rows="3" placeholder="Здравствуйте! "
+                          style="padding-right: 40px; overflow: hidden; resize: none;"
+                          class="form-control mb-3 bg-light"></textarea>
+
+                <button type="button"
+                        style="
+                            position: absolute;
+                            top: 5px;
+                            right: 10px;
+                            background: none;
+                            border: none;
+                            padding: 0;
+                            cursor: pointer;
+                            z-index: 1;
+                        "
+                >
+                    <svg width="2em" height="2em" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22 12a1 1 0 0 1-.57.9l-17 8a1 1 0 0 1-1.4-1.16l1.5-5.5a1 1 0 0 1 .61-.67L9.21 12l-4.07-1.57a1 1 0 0 1-.6-.67l-1.5-5.5A1 1 0 0 1 4.43 3.1l17 8a1 1 0 0 1 .57.9Z"></path>
+                    </svg>
+                </button>
+            </div>
+                <div class="d-flex flex-column gap-2 " id="questionsContainer">
+                    <button class="btn btn-outline-secondary question-btn" data-question="Еще продаёте? ">Еще продаете?</button>
+                    <button class="btn btn-outline-secondary question-btn" data-question="Когда можно посмотреть? ">Когда можно посмотреть?</button>
+                    <button class="btn btn-outline-secondary question-btn" data-question="Торг уместен? ">Торг уместен?</button>
+                </div>
+            </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.getElementById('questionInput').value = "Здравствуйте! ";
+
+    document.querySelectorAll('.question-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const question = this.getAttribute('data-question');
+            document.getElementById('questionInput').value += question;
+            this.remove();
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<div th:fragment="header">
+
+<header>
+    <div class="bg-white shadow-sm py-3">
+    <div class="container d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <!-- Логотип -->
+            <img src="/images/logo.jpg" alt="Логотип" class="logo me-2" />
+            <!-- Название сайта -->
+            <a href="/market" style="color: inherit; text-decoration: none;"><span class="fs-5 fw-bold">ToysMarket</span></a>
+        </div>
+
+        <!-- Поле поиска -->
+        <form class="w-50 mx-3">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Поиск товаров..." />
+                <button class="btn btn-outline-secondary" type="submit">Искать</button>
+            </div>
+        </form>
+
+        <!-- Панель пользователя -->
+
+        <div class="d-flex align-items-center">
+            <!-- Кнопка "Добавить товар" -->
+            <a th:href="@{/guest}" style="background-color: #4CAF50" class="btn btn-success me-3">Добавить товар</a>
+
+
+            <!-- Логика для неавторизованных -->
+            <div th:if="${currentUser == null}" class="ms-3">
+                <a class="btn btn-outline-primary me-2" style="color: #4CAF50; border-color: #4CAF50;" href="/login">Войти</a>
+                <a class="btn btn-outline-primary me-2" style="color: #4CAF50; border-color: #4CAF50;" href="/registration">Регистрация</a>
+            </div>
+
+            <!-- Логика для авторизованных -->
+            <div th:if="${currentUser != null}" class="dropdown text-end ms-3">
+
+                <div class="d-flex align-items-center dropdown-toggle" data-bs-toggle="dropdown">
+                    <!-- Круг с инициалами -->
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                        <span th:text="${currentUser.username?.substring(0, 2).toUpperCase()}"></span>
+                    </div>
+                    <!-- Имя пользователя -->
+                    <div>
+                        <div style="user-select: none; cursor: pointer" class="fw-semibold" th:text="${currentUser != null ? currentUser.username : ''}"></div>
+                    </div>
+                </div>
+
+                <!-- Всплывающий список -->
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a style="user-select: none; cursor: pointer" class="dropdown-item" th:href="@{|/user/__${userId}__|}">Профиль</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a style="user-select: none; cursor: pointer" class="dropdown-item text-danger" href="/logout">Выйти</a></li>
+                </ul>
+
+            </div>
+
+        </div>
+    </div>
+    </div>
+</header>
+
+</div>

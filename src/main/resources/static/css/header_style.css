@@ -1,0 +1,24 @@
+/* Стиль для неавторизованных кнопок */
+.btn-outline-primary.me-2:hover {
+    background-color: #4CAF50; /* Зелёный фон */
+    color: white !important;   /* Белый текст */
+    border-color: #4CAF50;    /* Цвет границы */
+}
+/* Стиль для кнопки в корзину*/
+.btn-outline-primary.me-0:hover {
+    background-color: #4CAF50; /* Зелёный фон */
+    color: white !important;   /* Белый текст */
+    border-color: #4CAF50;    /* Цвет границы */
+}
+
+.logo {
+    width: 30px;
+    height: auto;
+}
+
+/* Для кнопок Профиль и Выйти */
+.dropdown-menu .dropdown-item:focus,
+.dropdown-menu .dropdown-item:active {
+    outline: none !important;
+    background-color: transparent !important;
+}
