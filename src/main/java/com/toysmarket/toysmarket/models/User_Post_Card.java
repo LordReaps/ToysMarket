@@ -10,7 +10,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "t_users_cards")
+@Table(name = "t_users_cards_v2")
 public class User_Post_Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

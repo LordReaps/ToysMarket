@@ -117,7 +117,12 @@
 
       <!-- Автор -->
       <p class="fixed-one-line-author mb-2 pe-3 ps-3 pr-3 fw-semibold">
-        <span style="font-size: 0.8rem; color: #4CAF50;" th:text="${card.getCard_author()}"></span>
+        <span style="font-size: 0.8rem; color: #4CAF50;"
+              th:if="${authorUsers != null and authorUsers[card.id] != null}"
+              th:text="${authorUsers[card.id].loginName}"></span>
+        <span style="font-size: 0.8rem; color: #4CAF50;"
+              th:if="${authorUsers == null or authorUsers[card.id] == null}"
+              th:text="${card.getCard_author()}"></span>
       </p>
 
       <!--<a th:href="'/market/' + ${card.getId()}" class="btn btn-primary">Детальнее</a> -->

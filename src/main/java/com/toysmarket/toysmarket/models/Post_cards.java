@@ -7,6 +7,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -23,9 +25,16 @@ public class Post_cards {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    private String card_name, card_desc, card_place, card_author;
+    private String card_name, card_desc, card_place;
     private int card_price;
     private int card_status;
+
+    @Column(name = "card_author")
+    private Integer card_author;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_author", insertable = false, updatable = false)
+    private User author;
 
     @Column(name = "card_data", nullable = false)
     private LocalDate cardData;
@@ -70,13 +79,14 @@ public class Post_cards {
         this.card_place = card_place;
     }
 
-    public String getCard_author() {
-        return card_author;
+    public User getAuthor() {
+        return author;
     }
 
-    public void setCard_author(String card_author) {
-        this.card_author = card_author;
+    public void setAuthor(User author) {
+        this.author = author;
     }
+
 
     public int getCard_price() {
         return card_price;

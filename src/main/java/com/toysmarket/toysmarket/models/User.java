@@ -12,18 +12,19 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.persistence.Column;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 
 import java.util.Collection;
 import java.util.Set;
 
 @Entity
-@Table(name= "t_users")
+@Table(name= "t_users_v2")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,18 +32,23 @@ public class User implements UserDetails {
 
     @NotBlank(message = "Имя пользователя не может быть пустым")
     @Size(min = 10, message = "Не меньше 10 знаков")
+    @Column(name = "username", unique = true)
     private String username;
 
-    @NotBlank(message = "Пароль не может быть пустым")
-    @Size(min = 8, message = "Не меньше 8 знаков")
     private String password;
 
     @Transient
     private String passwordConfirm;
 
+    @Column(name = "login_name")
+    private String loginName;
+
+    @Column(name = "user_place")
+    private String userPlace;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "t_users_roles",
+            name = "t_user_roles_v2",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
@@ -87,6 +93,26 @@ public class User implements UserDetails {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
+
+    public String getUserPlace() {
+        return userPlace;
+    }
+
+    public void setUserPlace(String userPlace) {
+        this.userPlace = userPlace;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -105,10 +131,6 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     @Override

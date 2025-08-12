@@ -12,9 +12,9 @@ public interface Post_cards_repository extends CrudRepository<Post_cards, Intege
 
     //Я не знаю зачем, но приходится переопределять findAll, чтобы модели работали
     @Override
-    @EntityGraph(attributePaths = {"images"})
+    @EntityGraph(attributePaths = {"images", "author"})
     List<Post_cards> findAll();
 
-    @EntityGraph(attributePaths = {"images"})
+    @EntityGraph(attributePaths = {"images", "author"})
     Optional<Post_cards> findById(Integer id);
 }

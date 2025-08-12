@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.toysmarket.toysmarket.models.User;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @Controller
 public class RegistrationController {
@@ -29,45 +29,48 @@ public class RegistrationController {
     @PostMapping("/registration")
     public String addUser(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult, Model model){
 
-        //ПОЧЕМУ ТО ВСЕ ПРОВЕРКИ ВАЛИДАЦИИ ПРИШЛОСЬ ПИСАТЬ ТУТ. АННОТАЦИИ SIZE И NOTBLANK НЕ РАБОТАЮТ(((((
-
-        // Вручную проверяем длину username
+        // Валидация username
         if (userForm.getUsername() != null && userForm.getUsername().length() < 10) {
             bindingResult.rejectValue("username", "Size.userForm.username", "Не меньше 10 знаков");
         }
-
-        // Проверка, чтобы username не состоял только из пробелов
         if (userForm.getUsername() != null && userForm.getUsername().trim().isEmpty()) {
-            bindingResult.rejectValue("username", "NotBlank.userForm.username", "Имя пользователя не может состоять только из пробелов");
+            bindingResult.rejectValue("username", "NotBlank.userForm.username", "Почта не может быть пустой");
         }
 
-        // Вручную проверяем длину password
+        // Валидация loginName
+        if (userForm.getLoginName() == null || userForm.getLoginName().trim().isEmpty()) {
+            bindingResult.rejectValue("loginName", "NotBlank.userForm.loginName", "Логин не может быть пустым");
+        }
+
+        // Валидация userPlace
+        if (userForm.getUserPlace() == null || userForm.getUserPlace().trim().isEmpty()) {
+            bindingResult.rejectValue("userPlace", "NotBlank.userForm.userPlace", "Город не может быть пустым");
+        }
+
+        // Валидация password
         if (userForm.getPassword() != null && userForm.getPassword().length() < 8) {
             bindingResult.rejectValue("password", "Size.userForm.password", "Не меньше 8 знаков");
         }
-
-        // Проверка, чтобы password не состоял только из пробелов
-        if (userForm.getUsername() != null && userForm.getPassword().trim().isEmpty()) {
+        if (userForm.getPassword() != null && userForm.getPassword().trim().isEmpty()) {
             bindingResult.rejectValue("password", "NotBlank.userForm.password", "Пароль не может состоять только из пробелов");
         }
 
-        //Проверка общих ошибок валидации
+        // Ошибки валидации
         if (bindingResult.hasErrors()) {
-            // Безопасное извлечение сообщения об ошибке
             FieldError usernameError = bindingResult.getFieldError("username");
             String errorMessage = (usernameError != null) ? usernameError.getDefaultMessage() : null;
             model.addAttribute("userForm", userForm);
             return "registration";
         }
 
-        //Проверка совпадений паролей
+        // Проверка совпадения паролей
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
             model.addAttribute("passwordError", "Passwords do not match");
             model.addAttribute("userForm", userForm); // Передаём данные формы обратно
             return "registration";
         }
 
-        //Проверка существования пользователя (сейчас saveUser пропускает повторения, в будущем делаю через почту)
+        // Сохранение пользователя (возвращает false, если username уже существует или не найдена роль)
         if (!userService.saveUser(userForm)){
             model.addAttribute("usernameError", "User already exists");
             model.addAttribute("userForm", userForm); // Передаём данные формы обратно

@@ -160,7 +160,10 @@
             <div class="mb-5">Можно оплатить при получении</div>
 
             <!-- Автор -->
-            <h5 class="mb-0"><strong><span th:text="${card?.card_author}">Автор</span></strong></h5>
+            <h5 class="mb-0"><strong>
+                <span th:if="${authorUser != null}" th:text="${authorUser.loginName}">Автор</span>
+                <span th:if="${authorUser == null}" th:text="${card?.card_author}">Автор</span>
+            </strong></h5>
             <!-- Рейтинг !!!!!!!!!!!ПОКА СТАТИЧНЫЙ!!!!!!!!!!!!-->
             <div class="d-flex align-items-center">
                 <span>5,0</span>

@@ -50,11 +50,17 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean saveUser(User user) {
+        // Проверка уникальности username (почты)
+        if (user_repository.findUserByUsername(user.getUsername()) != null) {
+            return false; // пользователь с такой почтой уже существует
+        }
+
         Role userRole = role_repository.findByName("ROLE_USER");
         if (userRole == null) {
             return false; // роль не найдена
         }
-        user.setRoles(Collections.singleton(new Role(1, "ROLE_USER")));
+
+        user.setRoles(Collections.singleton(userRole));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user_repository.save(user);
         return true;

@@ -37,11 +37,11 @@
                 <div class="d-flex align-items-center dropdown-toggle" data-bs-toggle="dropdown">
                     <!-- Круг с инициалами -->
                     <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
-                        <span th:text="${currentUser.username?.substring(0, 2).toUpperCase()}"></span>
+                        <span th:text="${currentUser.loginName?.substring(0, 2).toUpperCase()}"></span>
                     </div>
                     <!-- Имя пользователя -->
                     <div>
-                        <div style="user-select: none; cursor: pointer" class="fw-semibold" th:text="${currentUser != null ? currentUser.username : ''}"></div>
+                        <div style="user-select: none; cursor: pointer" class="fw-semibold" th:text="${currentUser != null ? currentUser.loginName : ''}"></div>
                     </div>
                 </div>
 
