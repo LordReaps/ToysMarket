@@ -5,6 +5,61 @@
     <title>Профиль пользователя - ToysMarket</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" th:href="@{/css/header_style.css}" />
+    <style>
+        .card {
+            height: 80%; /* Высота карточки — 80% от родительского контейнера */
+        }
+
+        /*Чтобы описание ограничивалось 2-мя строками и заканчивалось многоточием*/
+        .fixed-two-lines-desc {
+            height: 2.4em; /* Высота 2 строки */
+            line-height: 1.2em; /* Высота одной строки */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fixed-two-lines-name {
+            height: 2.4em; /* Высота 2 строки */
+            line-height: 1.2em; /* Высота одной строки */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fixed-one-line-author {
+            height: 1.2em; /* Высота 2 строки */
+            line-height: 1.2em; /* Высота одной строки */
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Контейнер для квадратного изображения */
+        .square-image-container {
+            width: 100%;
+            height: 300px; /* Фиксированная высота — можно изменить под нужный размер */
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px; /* Необязательно, но улучшает внешний вид */
+            display: flex;
+            align-items: center;
+        }
+
+        /* Стили для квадратного изображения */
+        .img-square {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            object-fit: cover; /* Заполняет всё пространство, сохраняя пропорции */
+        }
+    </style>
 </head>
 <body>
 
@@ -12,28 +67,88 @@
 
 <div class="container mt-4">
     <h2>Профиль пользователя</h2>
-    
-    <div th:if="${user != null}">
-        <p><strong>Логин:</strong> <span th:text="${user.loginName}">Логин</span></p>
-        <p><strong>Почта:</strong> <span th:text="${user.username}">Почта</span></p>
-        <p th:if="${user.userPlace != null}"><strong>Город:</strong> <span th:text="${user.userPlace}">Город</span></p>
+
+    <div th:if="${currentUser != null}">
+        <p><strong>Логин:</strong> <span th:text="${currentUser.getLoginName}">Логин</span></p>
+        <p><strong>Почта:</strong> <span th:text="${currentUser.getUsername}">Почта</span></p>
+        <p th:if="${currentUser.getUserPlace != null}"><strong>Город:</strong> <span th:text="${currentUser.getUserPlace}">Город</span></p>
     </div>
-    
+
     <h3>Объявления пользователя</h3>
-    
-    <div th:if="${userCards == null or userCards.empty}">
+
+    <div th:if="${postCards == null or postCards.empty}">
         <p>У пользователя пока нет объявлений</p>
     </div>
 
-    <div th:if="${userCards != null and not userCards.empty}">
-        <div th:each="userPostCard : ${userCards}">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${userPostCard.card.card_name}">Название товара</h5>
-                    <p class="card-text" th:text="${userPostCard.card.card_desc}">Описание</p>
-                    <p class="card-text"><small class="text-muted">Цена: <span th:text="${userPostCard.card.card_price}">0</span> ₽</small></p>
+    <div th:if="${postCards != null and not postCards.empty}">
+        <div class="container mt-4 d-flex justify-content-center">
+            <div class="row g-4">
+                <div th:each="card : ${postCards}" class = "col-md-3 mb-4">
+                    <a th:href="@{/card/{id}(id=${card.getId()})}" class="text-decoration-none text-reset">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+
+                                <!--Изображение-->
+                                <div class="square-image-container">
+                                    <div>
+
+                                        <img th:if="${card.getFirstImagePath() != null}"
+                                             th:src="@{'/api/images/' + ${card.getFirstImagePath()}}"
+                                             alt="Фон товара"
+                                             class="img-square"
+                                             style="opacity: 0.3; position: absolute;
+                                            top: 0; left: 0; width: 100%; height: 100%;
+                                            object-fit: cover; z-index: 0;
+                                            filter: blur(17px);
+                                            "
+                                        />
+
+                                        <img th:if="${card.getFirstImagePath() != null}"
+                                             th:src="@{'/api/images/' + ${card.getFirstImagePath()}}"
+                                             alt="Изображение товара"
+                                             class="img-square"
+                                             style="position: relative; z-index: 1;"
+                                        />
+
+                                    </div>
+                                </div>
+
+                                <!--Название-->
+                                <h5 class="card-title fixed-two-lines-name ps-3 pe-3 mb-0 mt-2" th:text="${card.getCard_name()}"></h5>
+
+                                <!--Цена-->
+                                <p class="mb-0 ps-3 pe-3">
+                                    <strong><span style="font-size: 1.5rem; color: #4CAF50;" th:text="${card.getCard_price()}"></span></strong>
+                                    <strong><span style="font-size: 1.4rem; color: #4CAF50;">₽</span></strong>
+                                </p>
+
+                                <!--Описание-->
+                                <p class="card-text fixed-two-lines-desc text-muted ps-3 pe-3 mb-0 mt-2 small " th:text="${card.getCard_desc()}"></p>
+
+                                <!-- Горизонтальная тонкая серая линия между Описание и Место -->
+                                <hr class="my-2" style="border-top: 2px solid #ccc; margin: 8px 16px;"/>
+
+                                <!-- Место -->
+                                <p  style = "font-size: 0.8rem" class="mb-0 text-muted ps-2 pe-3">📍<span th:text="${card.getCard_place()}"></span></p>
+
+                                <!-- Автор -->
+                                <p class="fixed-one-line-author mb-2 pe-3 ps-3 pr-3 fw-semibold">
+                                    <span style="font-size: 0.8rem; color: #4CAF50;"
+                                    th:if="${authorUsers != null and authorUsers[card.id] != null}"
+                                    th:text="${authorUsers[card.id].loginName}">
+                                    </span>
+                                    <span style="font-size: 0.8rem; color: #4CAF50;"
+                                          th:if="${authorUsers == null or authorUsers[card.id] == null}"
+                                          th:text="${card.getCard_author()}">
+                                    </span>
+                                </p>
+                                <!--<a th:href="'/market/' + ${card.getId()}" class="btn btn-primary">Детальнее</a> -->
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

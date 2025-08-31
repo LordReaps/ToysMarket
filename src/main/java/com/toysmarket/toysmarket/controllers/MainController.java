@@ -16,7 +16,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -128,7 +130,26 @@ public class MainController {
 
         // Получение карточек пользователя через репозиторий (избегаем LazyInitializationException)
         Set<User_Post_Card> userCards = user_post_card_repository.findAllByUserId(id);
-        model.addAttribute("userCards", userCards);
+
+        // Создаем список только Post_cards (через связь)
+        List<Post_cards> postCards = new ArrayList<>();
+        for (User_Post_Card upc : userCards) {
+            if (upc.getCard() != null) {
+                postCards.add(upc.getCard());
+            }
+        }
+
+        model.addAttribute("postCards", postCards);
+
+        // Построение карты авторов по id карточки
+        Map<Integer, User> authorUsers = new HashMap<>();
+        for (Post_cards c : postCards) {
+            User author = c.getAuthor();
+            if (author != null) {
+                authorUsers.put(c.getId(), author);
+            }
+        }
+        model.addAttribute("authorUsers", authorUsers);
 
         return "user";
     }
